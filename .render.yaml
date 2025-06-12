@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: softskilia-backend
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+    rootDir: backend
