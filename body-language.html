@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Body Language Practice – Soft Skilia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f7;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #003366;
+      text-align: center;
+    }
+
+    #scenarioPrompt {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      font-family: monospace, monospace;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #feedbackBox {
+      margin-top: 20px;
+      background-color: #e8f0fe;
+      padding: 15px;
+      border-radius: 10px;
+      white-space: pre-line;
+      font-size: 1rem;
+      color: #004085;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Body Language Practice</h1>
+    <p id="scenarioPrompt"><strong>Scenario:</strong> Loading...</p>
+    <textarea id="userResponse" placeholder="Describe how you would use effective body language..."></textarea>
+    <br />
+    <button onclick="submitResponse()">Submit Response</button>
+    <button onclick="nextScenario()">Next Scenario</button>
+    <button onclick="location.href='dashboard.html'" style="background-color: #6c757d;">Back</button>
+
+    <div id="feedbackBox"></div>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        prompt: "During a job interview, how would you use body language to convey confidence?",
+        modelResponse: `Maintain eye contact, sit upright with relaxed shoulders, smile naturally, and use purposeful hand gestures. Avoid fidgeting or crossing your arms to appear open and engaged.`
+      },
+      {
+        prompt: "You want to show attentiveness while listening in a team meeting. How do you use body language?",
+        modelResponse: `Face the speaker directly, nod occasionally, maintain eye contact, and lean slightly forward to show interest. Avoid distractions like checking your phone or looking away.`
+      },
+      {
+        prompt: "How would you use body language to politely disagree with someone during a discussion?",
+        modelResponse: `Maintain an open posture, keep calm facial expressions, and use slow, deliberate gestures. Avoid aggressive stances like pointing or clenched fists to keep the conversation respectful.`
+      },
+      {
+        prompt: "When giving a presentation, how can you use body language to engage the audience?",
+        modelResponse: `Use purposeful movement around the stage, make eye contact with different sections, use expressive hand gestures, and maintain an upright posture to convey enthusiasm and credibility.`
+      },
+      {
+        prompt: "How do you use body language to build rapport in a casual conversation?",
+        modelResponse: `Smile genuinely, mirror the other person’s posture subtly, maintain comfortable eye contact, and use relaxed gestures to create a friendly and approachable atmosphere.`
+      }
+    ];
+
+    let current = 0;
+
+    function loadScenario() {
+      document.getElementById("scenarioPrompt").innerHTML = `<strong>Scenario:</strong> ${scenarios[current].prompt}`;
+      document.getElementById("userResponse").value = "";
+      document.getElementById("feedbackBox").innerText = "";
+    }
+
+    function submitResponse() {
+      const userText = document.getElementById("userResponse").value.trim();
+      const feedbackBox = document.getElementById("feedbackBox");
+
+      if (userText.length < 50) {
+        feedbackBox.innerText = "❌ Your response seems too short. Please provide a detailed explanation.";
+        return;
+      }
+
+      const keywords = ["eye contact", "posture", "gesture", "smile", "nod", "open", "relaxed", "calm", "engage", "lean"];
+      const userLower = userText.toLowerCase();
+      let score = 0;
+
+      keywords.forEach(word => {
+        if (userLower.includes(word)) {
+          score++;
+        }
+      });
+
+      let feedback = "";
+      if (score >= 3) {
+        feedback = "✅ Great! Your response covers important aspects of effective body language.\n\n";
+      } else {
+        feedback = "⚠️ Try to include more about eye contact, posture, gestures, and facial expressions in your response.\n\n";
+      }
+
+      feedback += `📝 Suggested model response:\n${scenarios[current].modelResponse}`;
+
+      feedbackBox.innerText = feedback;
+    }
+
+    function nextScenario() {
+      current++;
+      if (current >= scenarios.length) {
+        current = 0;
+        alert("You have completed all scenarios. Restarting.");
+      }
+      loadScenario();
+    }
+
+    window.onload = loadScenario;
+  </script>
+</body>
+</html>

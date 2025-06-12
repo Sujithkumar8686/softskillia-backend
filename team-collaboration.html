@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Team Collaboration Practice – Soft Skilia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f7;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #003366;
+      text-align: center;
+    }
+
+    #scenarioPrompt {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      font-family: monospace, monospace;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #feedbackBox {
+      margin-top: 20px;
+      background-color: #e8f0fe;
+      padding: 15px;
+      border-radius: 10px;
+      white-space: pre-line;
+      font-size: 1rem;
+      color: #004085;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Team Collaboration Practice</h1>
+    <p id="scenarioPrompt"><strong>Scenario:</strong> Loading...</p>
+    <textarea id="userResponse" placeholder="Describe your approach here..."></textarea>
+    <br />
+    <button onclick="submitResponse()">Submit Response</button>
+    <button onclick="nextScenario()">Next Scenario</button>
+    <button onclick="location.href='dashboard.html'" style="background-color: #6c757d;">Back</button>
+
+    <div id="feedbackBox"></div>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        prompt: "Your team is facing a conflict over task priorities. How would you handle the situation to ensure smooth collaboration?",
+        modelResponse: `To handle conflicts over task priorities, I would organize a team meeting to openly discuss each member's perspective. I'd encourage active listening and aim to reach a consensus by prioritizing tasks based on urgency and impact. Setting clear roles and deadlines would also help avoid future conflicts.`
+      },
+      {
+        prompt: "A team member is not contributing their share of work, affecting overall progress. How would you address this?",
+        modelResponse: `I would first have a one-on-one conversation with the team member to understand any challenges they're facing. Then, I would offer support or suggest redistributing tasks if necessary. Maintaining open communication and emphasizing team goals can motivate better participation.`
+      },
+      {
+        prompt: "Your team is working remotely and communication has been slow and unclear. What strategies would you use to improve collaboration?",
+        modelResponse: `I would propose establishing regular virtual meetings, using clear and consistent communication tools, and setting up shared documents for transparency. Encouraging prompt responses and clarifying expectations can improve remote teamwork efficiency.`
+      },
+      {
+        prompt: "You need to collaborate with a cross-functional team with different work styles. How would you ensure effective teamwork?",
+        modelResponse: `I would start by understanding each team member’s work style and preferences. I would promote respect for diversity, set clear common goals, and use collaborative tools to coordinate efforts. Flexibility and patience are key to adapting to different styles.`
+      },
+      {
+        prompt: "A project deadline is approaching, but some team members are falling behind. How do you motivate the team to meet the deadline?",
+        modelResponse: `I would communicate the urgency clearly and reinforce the importance of the deadline. Offering support, breaking tasks into manageable chunks, and celebrating small milestones can boost motivation. Encouraging teamwork and sharing responsibility helps ensure timely delivery.`
+      }
+    ];
+
+    let current = 0;
+
+    function loadScenario() {
+      document.getElementById("scenarioPrompt").innerHTML = `<strong>Scenario:</strong> ${scenarios[current].prompt}`;
+      document.getElementById("userResponse").value = "";
+      document.getElementById("feedbackBox").innerText = "";
+    }
+
+    function submitResponse() {
+      const userText = document.getElementById("userResponse").value.trim();
+      const feedbackBox = document.getElementById("feedbackBox");
+
+      if (userText.length < 50) {
+        feedbackBox.innerText = "❌ Your response seems too short. Try to write a detailed approach.";
+        return;
+      }
+
+      // Simple keyword check for collaboration-related words
+      const keywords = ["communication", "team", "support", "meeting", "listen", "tasks", "goals", "collaborate", "deadline"];
+      const userLower = userText.toLowerCase();
+      let score = 0;
+
+      keywords.forEach(word => {
+        if (userLower.includes(word)) {
+          score++;
+        }
+      });
+
+      let feedback = "";
+      if (score >= 3) {
+        feedback = "✅ Good response! You addressed key aspects of effective team collaboration.\n\n";
+      } else {
+        feedback = "⚠️ Your response could include more on communication, support, and teamwork.\n\n";
+      }
+
+      feedback += `📝 Suggested model response:\n${scenarios[current].modelResponse}`;
+
+      feedbackBox.innerText = feedback;
+    }
+
+    function nextScenario() {
+      current++;
+      if (current >= scenarios.length) {
+        current = 0;
+        alert("You have completed all scenarios. Starting again.");
+      }
+      loadScenario();
+    }
+
+    window.onload = loadScenario;
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation – Soft Skilia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8fafc;
+      color: #333;
+    }
+
+    header {
+      background-color: #003366;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .sim-title {
+      font-size: 1.8rem;
+      color: #003366;
+      margin-bottom: 1rem;
+    }
+
+    .sim-description {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .sim-content {
+      padding: 1.5rem;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .sim-response {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sim-response textarea {
+      resize: vertical;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .submit-btn {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #ffcc00;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #003366;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #e6b800;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Soft Skilia</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="profile.html">Profile</a>
+      <a href="login.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2 class="sim-title" id="simTitle">Simulation</h2>
+    <p class="sim-description" id="simDescription">Loading your soft skill simulation...</p>
+
+    <div class="sim-content">
+      <h3>Scenario:</h3>
+      <p id="scenarioText">You are in a virtual situation related to your selected skill. Respond accordingly.</p>
+
+      <div class="sim-response">
+        <label for="response">Your Response:</label>
+        <textarea id="response" rows="5" placeholder="Type your response here..."></textarea>
+        <button class="submit-btn" onclick="submitResponse()">Submit</button>
+        <button onclick="location.href='dashboard.html'" style="background-color: #6c757d;">Back</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const skill = params.get("skill") || "soft-skill";
+    const resume = params.get("resume") === "true";
+
+    document.getElementById("simTitle").innerText = `${skill.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} Simulation`;
+    document.getElementById("simDescription").innerText = resume ? "Resuming your simulation..." : "Begin the following scenario and submit your response.";
+
+    // Placeholder scenario based on skill
+    const scenarios = {
+      interview: "You are asked: 'Tell me about a time you faced a challenge at work.'",
+      conflict: "A team member strongly disagrees with your decision. How do you respond?",
+      presentation: "You are to present a new project idea to your team. Begin your presentation.",
+    };
+
+    document.getElementById("scenarioText").innerText = scenarios[skill] || "This is a generic simulation scenario. The real one will be loaded dynamically later.";
+
+    function submitResponse() {
+      const response = document.getElementById("response").value;
+      if (!response.trim()) {
+        alert("Please enter your response before submitting.");
+        return;
+      }
+
+      // Placeholder: send to backend
+      console.log("Skill:", skill);
+      console.log("Response:", response);
+      alert("Your response has been submitted for analysis.");
+
+      // Redirect to dashboard or results
+      window.location.href = "dashboard.html";
+    }
+  </script>
+</body>
+</html>

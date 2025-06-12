@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soft Skilia – Master Soft Skills</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f4f8fb;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #003366;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 500;
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem 2rem;
+      color: white;
+      background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 51, 102, 0.6);
+      z-index: 1;
+    }
+
+    .hero h1,
+    .hero p,
+    .cta-buttons {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    .cta-buttons a {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: #ffcc00;
+      color: #003366;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      margin: 0 0.5rem;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .cta-buttons a:hover {
+      background-color: #e6b800;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 4rem 2rem;
+      background: #ffffff;
+    }
+
+    .feature {
+      background: #e9f1fb;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .feature h3 {
+      margin-bottom: 1rem;
+      color: #003366;
+    }
+
+    #demo {
+      padding: 4rem 2rem;
+      background: #f4f8fb;
+      text-align: center;
+      color: #003366;
+    }
+
+    #demo h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    #demo p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto 1rem;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    footer {
+      background: #003366;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Soft Skilia</div>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="get started.html">Get Started</a>
+      <a href="login.html">Login</a>
+      <a href="contact-us.html">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Master Soft Skills Through Simulation</h1>
+    <p>Interactive scenarios, AI feedback, and personalized learning — all in one powerful platform to help you thrive in real-world professional situations.</p>
+    <div class="cta-buttons">
+      <a href="https://www.figma.com/proto/4SRyj2fg4dODeKOxuujuOs?node-id=0-1&t=nvgQUZZ6eihX28Se-6" target="_blank">Try Now</a>
+      <a href="#demo">Watch Demo</a>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="feature">
+      <h3>AI-Powered Simulations</h3>
+      <p>Engage in real-time conversations with AI-driven characters to enhance communication and leadership skills.</p>
+    </div>
+    <div class="feature">
+      <h3>Gamified Learning</h3>
+      <p>Earn badges, track your progress, and stay motivated through an immersive learning experience.</p>
+    </div>
+    <div class="feature">
+      <h3>Personalized Feedback</h3>
+      <p>Receive instant feedback and improvement tips based on your tone, decision-making, and clarity.</p>
+    </div>
+  </section>
+
+  <section id="demo">
+    <h2>Demo Coming Soon</h2>
+    <p>We’re building something amazing. Stay tuned!</p>
+    <p>Explore the <a href="https://www.figma.com/proto/4SRyj2fg4dODeKOxuujuOs?node-id=0-1" target="_blank">Figma prototype</a> meanwhile.</p>
+    <div id="demo-video-placeholder" style="margin-top: 2rem; border: 2px dashed #003366; padding: 1rem; border-radius: 8px;">
+      <em>Demo video or simulation will appear here soon.</em>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Soft Skilia. All rights reserved.</p>
+  </footer>
+</body>
+</html>

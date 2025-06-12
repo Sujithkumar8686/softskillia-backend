@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Empathy Simulation – Soft Skilia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f7;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #003366;
+      text-align: center;
+    }
+
+    textarea {
+      width: 100%;
+      height: 140px;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin-right: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #feedbackBox {
+      margin-top: 25px;
+      background-color: #e8f0fe;
+      padding: 20px;
+      border-radius: 10px;
+      white-space: pre-line;
+      font-size: 1rem;
+      color: #333;
+      min-height: 120px;
+    }
+
+    #backBtn {
+      background-color: #6c757d;
+    }
+
+    #backBtn:hover {
+      background-color: #495057;
+    }
+  </style>
+</head>
+<body>
+  <h1>Empathy Simulation</h1>
+
+  <p><strong>Scenario:</strong> A colleague seems upset after receiving critical feedback. How do you respond with empathy?</p>
+
+  <textarea id="userAnswer" placeholder="Type your empathetic response here..."></textarea>
+  <br />
+  <button onclick="submitAnswer()">Submit Answer</button>
+  <button onclick="resetForm()">Reset</button>
+  <button id="backBtn" onclick="goBack()">Back to Dashboard</button>
+
+  <div id="feedbackBox"></div>
+
+  <script>
+    const modelAnswer = 
+`I would acknowledge their feelings and let them know it’s okay to feel upset. I would listen actively without interrupting, offer support, and reassure them that constructive feedback is meant to help them grow.`;
+
+    function submitAnswer() {
+      const answer = document.getElementById('userAnswer').value.trim().toLowerCase();
+      const feedbackBox = document.getElementById('feedbackBox');
+
+      if (answer.length < 20) {
+        feedbackBox.innerText = `❌ Your response seems too short. Please provide a more detailed empathetic reply.\n\n💡 Example:\n${modelAnswer}`;
+        return;
+      }
+
+      const keywords = ['listen', 'support', 'feel', 'understand', 'acknowledge', 'reassure', 'empathy'];
+      const containsKeywords = keywords.some(keyword => answer.includes(keyword));
+
+      if (containsKeywords) {
+        feedbackBox.innerText = `✅ Well done! Your response reflects empathy effectively.\n\n📝 Model Answer:\n${modelAnswer}`;
+      } else {
+        feedbackBox.innerText = `⚠️ Good attempt! Try to include listening, support, and understanding in your response.\n\n📝 Model Answer:\n${modelAnswer}`;
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('userAnswer').value = '';
+      document.getElementById('feedbackBox').innerText = '';
+    }
+
+    function goBack() {
+      window.location.href = 'dashboard.html'; // Adjust if your dashboard filename differs
+    }
+  </script>
+</body>
+</html>

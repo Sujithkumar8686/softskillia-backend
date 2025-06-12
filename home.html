@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home – Soft Skilia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8f9fa, #dfe9f3);
+      padding: 2rem;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .welcome {
+      font-size: 1.2rem;
+    }
+
+    .logout {
+      background-color: #ff4d4f;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-ring {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(#00c853 25%, #e0e0e0 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+      font-weight: bold;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .cta-buttons button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .continue {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .dashboard {
+      background-color: #00c853;
+      color: white;
+    }
+
+    .tip {
+      background-color: #f0f9ff;
+      padding: 1rem;
+      border-left: 5px solid #00bcd4;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .job-section {
+      margin-top: 4rem;
+    }
+
+    .job-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+
+    .jobs-container {
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .job-item {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .job-item:last-child {
+      border-bottom: none;
+    }
+
+    .refresh-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .refresh-btn:hover {
+      background-color: #059669;
+    }
+
+    .timestamp {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="profile">
+      <img src="https://via.placeholder.com/50" alt="Profile Picture">
+      <div class="welcome" id="user-welcome">Welcome</div>
+    </div>
+    <button class="logout" onclick="logoutUser()">Logout</button>
+  </header>
+
+  <div class="tip">
+    ✨ Tip of the Day: "Active listening is the foundation of strong communication."
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <h3>Your Progress</h3>
+      <div class="progress-ring">25%</div>
+    </div>
+    <div class="card">
+      <h3>Skill Focus</h3>
+      <p>You are improving most in <strong>Conflict Resolution</strong>.</p>
+      <p>Suggested next: <strong>Presentation Skills</strong></p>
+    </div>
+    <div class="card">
+      <h3>Simulations</h3>
+      <p>Completed: <strong>5</strong> / 20</p>
+      <p>Last Attempted: <strong>Team Presentation</strong></p>
+    </div>
+    <div class="card">
+      <h3>Achievements</h3>
+      <ul>
+        <li>🌟 Completed First Simulation</li>
+        <li>🏆 3-Day Practice Streak</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta-buttons">
+    <button class="continue">Resume Last Simulation</button>
+    <button class="dashboard" onclick="location.href='dashboard.html'">View Dashboard</button>
+  </div>
+
+  <section class="job-section">
+    <h2>Today's Hiring Opportunities</h2>
+    <div class="jobs-container" id="job-list">
+      <p>Loading job listings...</p>
+    </div>
+    <div class="timestamp" id="last-updated"></div>
+    <button class="refresh-btn" onclick="loadJobs()">Refresh Jobs</button>
+  </section>
+
+  <script>
+    async function loadJobs() {
+      const jobList = document.getElementById('job-list');
+      const timestamp = document.getElementById('last-updated');
+      jobList.innerHTML = '<p>Fetching latest jobs...</p>';
+      try {
+        const res = await fetch('/api/jobs');
+        const jobs = await res.json();
+        if (Array.isArray(jobs) && jobs.length > 0) {
+          jobList.innerHTML = jobs.map(job => `
+            <div class="job-item">
+              <strong>${job.title}</strong><br>
+              <span>${job.company} – ${job.location}</span><br>
+              <a href="${job.link}" target="_blank">View Job</a>
+            </div>
+          `).join('');
+        } else {
+          jobList.innerHTML = '<p>No jobs found right now.</p>';
+        }
+        const now = new Date();
+        timestamp.textContent = `Last updated: ${now.toLocaleString()}`;
+      } catch (error) {
+        jobList.innerHTML = '<p>Error fetching jobs. Please try again later.</p>';
+        timestamp.textContent = '';
+      }
+    }
+
+    async function checkSession() {
+      const res = await fetch('/api/session', {
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (data.loggedIn) {
+        document.getElementById("user-welcome").textContent = `Welcome, ${data.username}`;
+      } else {
+        window.location.href = "login.html";
+      }
+    }
+
+    async function logoutUser() {
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+      window.location.href = "login.html";
+    }
+
+    window.onload = function () {
+      checkSession();
+      loadJobs();
+    };
+  </script>
+</body>
+
+</html>
