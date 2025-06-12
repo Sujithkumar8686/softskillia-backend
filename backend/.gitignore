@@ -1,0 +1,9 @@
+# Ignore Python environment and cache
+venv/
+__pycache__/
+
+# Ignore SQLite databases
+*.db
+
+# Ignore secret files
+.env
