@@ -4,7 +4,7 @@ services:
     runtime: python
     buildCommand: pip install -r backend/requirements.txt
     startCommand: gunicorn app:app --chdir backend
-    env: python
+    envVars: []  # optional, you can remove or define vars here
     region: oregon
     plan: free
     branch: main
