@@ -144,9 +144,13 @@ def get_jobs():
     ]
     return jsonify(jobs)
 
+# ✅ Root route to avoid 404 on homepage
+@app.route("/")
+def index():
+    return jsonify({"message": "Soft Skilia backend is live 🚀"})
+
 if __name__ == "__main__":
     import os
     create_tables()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
-
