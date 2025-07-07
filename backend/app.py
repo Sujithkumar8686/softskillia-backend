@@ -1,42 +1,39 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import os
 
 app = Flask(__name__)
 app.secret_key = "softskilia_secret_key"
 CORS(app, supports_credentials=True)
 
-def get_user_db():
-    conn = sqlite3.connect('users.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+DATABASE_URL = os.environ.get("DATABASE_URL")  # Render injects this
 
-def get_progress_db():
-    conn = sqlite3.connect('progress.db')
-    conn.row_factory = sqlite3.Row
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
     return conn
 
 def create_tables():
-    with get_user_db() as conn:
-        conn.execute('''
+    with get_db_connection() as conn:
+        cur = conn.cursor()
+        cur.execute('''
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL
             )
         ''')
-
-    with get_progress_db() as conn:
-        conn.execute('''
+        cur.execute('''
             CREATE TABLE IF NOT EXISTS progress (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id),
                 simulation_name TEXT,
-                completed INTEGER DEFAULT 0,
-                FOREIGN KEY(user_id) REFERENCES users(id)
+                completed INTEGER DEFAULT 0
             )
         ''')
+        conn.commit()
 
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -49,11 +46,15 @@ def register():
 
     hashed_pw = generate_password_hash(password)
     try:
-        with get_user_db() as conn:
-            conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_pw))
+        with get_db_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_pw))
+            conn.commit()
         return jsonify({"success": True})
-    except sqlite3.IntegrityError:
+    except psycopg2.errors.UniqueViolation:
         return jsonify({"success": False, "message": "Username already exists."}), 409
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -61,8 +62,10 @@ def login():
     username = data.get("username")
     password = data.get("password")
 
-    with get_user_db() as conn:
-        user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+    with get_db_connection() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cur.fetchone()
         if user and check_password_hash(user["password"], password):
             session["username"] = username
             session["user_id"] = user["id"]
@@ -87,9 +90,10 @@ def get_progress():
         return jsonify({"success": False, "message": "Not logged in"}), 401
 
     user_id = session["user_id"]
-    with get_progress_db() as conn:
-        rows = conn.execute("SELECT * FROM progress WHERE user_id = ?", (user_id,)).fetchall()
-        data = [dict(row) for row in rows]
+    with get_db_connection() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM progress WHERE user_id = %s", (user_id,))
+        data = cur.fetchall()
     return jsonify({"success": True, "progress": data})
 
 @app.route("/api/progress", methods=["POST"])
@@ -101,22 +105,25 @@ def save_progress():
     simulation = data.get("simulation_name")
     completed = int(data.get("completed", 0))
 
-    with get_progress_db() as conn:
-        existing = conn.execute(
-            "SELECT * FROM progress WHERE user_id = ? AND simulation_name = ?",
+    with get_db_connection() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT * FROM progress WHERE user_id = %s AND simulation_name = %s",
             (session["user_id"], simulation)
-        ).fetchone()
+        )
+        existing = cur.fetchone()
 
         if existing:
-            conn.execute(
-                "UPDATE progress SET completed = ? WHERE user_id = ? AND simulation_name = ?",
+            cur.execute(
+                "UPDATE progress SET completed = %s WHERE user_id = %s AND simulation_name = %s",
                 (completed, session["user_id"], simulation)
             )
         else:
-            conn.execute(
-                "INSERT INTO progress (user_id, simulation_name, completed) VALUES (?, ?, ?)",
+            cur.execute(
+                "INSERT INTO progress (user_id, simulation_name, completed) VALUES (%s, %s, %s)",
                 (session["user_id"], simulation, completed)
             )
+        conn.commit()
 
     return jsonify({"success": True})
 
@@ -144,13 +151,7 @@ def get_jobs():
     ]
     return jsonify(jobs)
 
-# ✅ Root route to avoid 404 on homepage
-@app.route("/")
-def index():
-    return jsonify({"message": "Soft Skilia backend is live 🚀"})
-
 if __name__ == "__main__":
-    import os
     create_tables()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
